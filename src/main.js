@@ -1,7 +1,7 @@
 const {  app, BrowserWindow, screen, Tray, Menu, nativeImage, globalShortcut } = require('electron');
 
 const appName = "GameLauncher";
-const iconPath = 'assets/img/icon.png';
+const iconPath = 'frontend/assets/img/icon.png';
 
 var win;
 var trayIcon;

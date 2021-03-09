@@ -2,15 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Game Launcher</title>
+    <link rel="stylesheet" href="assets/css/style_index.css">
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg></script>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
-<body style="background: white;">
-    <h1>Hello World!</h1>
-    <p>
-        We are using node <script>document.write(process.versions.node)</script>,
-        Chrome <script>document.write(process.versions.chrome)</script>,
-        and Electron <script>document.write(process.versions.electron)</script>.
-    </p>
+<body style="background: rgba(0, 0, 0, 0.5);">
+    <button id="add-app"><i class="far fa-plus-square"></i></button>
+    <div id="status">
+        <h1>:(</h1>
+        <p>Looks like there's nothing here</p>
+    </div>
 </body>
 </html>
