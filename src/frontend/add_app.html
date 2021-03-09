@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg></script>
+    <link rel="stylesheet" href="assets/css/header_bar.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body style="background: rgb(71, 71, 71);">
+    <div id="header-bar">
+        <img id="header-icon" src="assets/img/icon.png">
+        <p id="header-name">Add new App</p>
+        <button id="header-close" onclick="window.api.send('toMain', 'closeWindow add_app')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="content-main">
+        <div id="add-app-main">
+            <input type="file" placeholder="Select your File">
+            <input type="text" placeholder="Give your App a custom name">
+            <button onclick="" type="submit">Add App <img src="assets/img/add_layer.png"></button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,9 +1,12 @@
-const {  app, BrowserWindow, screen, Tray, Menu, nativeImage, globalShortcut } = require('electron');
+const {app, BrowserWindow, screen, Tray, Menu, nativeImage, globalShortcut, Main, ipcMain } = require('electron');
+const path = require("path");
 
 const appName = "GameLauncher";
 const iconPath = 'frontend/assets/img/icon.png';
 
 var win;
+var win_settings;
+var win_addGame;
 var trayIcon;
 var tray;
 
@@ -29,8 +32,10 @@ function createWindow () {
     alwaysOnTop: true,
     skipTaskbar: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: true
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
     }
   });
   let currentScreen = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
@@ -63,7 +68,9 @@ function createTray() {
     { label: 'Show ', type: 'normal', click: () => {showWindow()}},
     { label: 'Quit', type: 'normal', click: () => {shutdown()}},
     { type: 'separator'},
-    { label: 'Exit Menu', type: 'normal' },
+    { label: 'Settings ', type: 'normal', click: () => {openWindow_Settings()}},
+    { type: 'separator'},
+    { label: 'Exit Menu', type: 'normal'}
   ])
   tray.setToolTip(appName);
   tray.setContextMenu(contextMenu);
@@ -77,3 +84,111 @@ function registerShortcut() {
 }
 
 app.whenReady().then(init);
+
+// Windows
+function openWindow_Settings() {
+  if (win_settings != undefined && !win_settings.isDestroyed()) {
+    win_settings.destroy();
+  }
+  win_settings = new BrowserWindow({
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    show: false,
+    width: 600,
+    height: 700,
+    parent: win,
+    frame: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
+    }
+  });
+  win_settings.loadFile("frontend/settings.html");
+  win_settings.setTitle(appName + " Settings");
+  win_settings.once('ready-to-show', () => {
+    win_settings.show()
+  });
+}
+
+function openWindow_Add_app() {
+  if (win_addGame != undefined && !win_addGame.isDestroyed()) {
+    win_addGame.destroy();
+  }
+  win_addGame = new BrowserWindow({
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    show: false,
+    width: 400,
+    height: 400,
+    parent: win,
+    frame: false,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
+    }
+  });
+  win_addGame.loadFile("frontend/add_app.html");
+  win_addGame.once('ready-to-show', () => {
+    win_addGame.show()
+  });
+}
+function closeWindow_Settings(){
+  if(!win_settings.isDestroyed()){
+    win_settings.destroy();
+  }
+}
+function closeWindow_Add_app(){
+  if(!win_addGame.isDestroyed()){
+    win_addGame.destroy();
+  }
+}
+
+app.on('browser-window-blur', () => {
+  if (win != null && win != undefined && !win.isDestroyed()){
+    if (!win.isFocused()) {
+      if (win_settings != undefined && !win_settings.isDestroyed()) {
+        if (win_settings.isFocused()) {
+          return;
+        }
+      }
+      if (win_addGame != undefined && !win_addGame.isDestroyed()) {
+        if (win_addGame.isFocused()) {
+          return;
+        }
+      }
+      hideWindow();
+    }
+  }
+});
+
+ipcMain.on("toMain", (event, command) => {
+  args = command.split(' ');
+  if (args.length > 0) {
+    switch(args[0]){
+      case 'openWindow':
+        if (args.length > 1) {
+          if (args[1] == "settings") {
+            openWindow_Settings();
+          }
+          else if (args[1] == "add_app") {
+            openWindow_Add_app();
+          }
+        }
+        break;
+      case 'closeWindow':
+      if (args.length > 1) {
+        if (args[1] == "settings") {
+          closeWindow_Settings();
+        }
+        else if (args[1] == "add_app") {
+          closeWindow_Add_app();
+        }
+      }
+      break;
+    }
+  }
+});

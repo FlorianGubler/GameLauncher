@@ -1,7 +1,7 @@
 {
   "name": "gamelauncher",
   "version": "1.0.0",
-  "author": "OJanka",
+  "author": "Florian Gubler, OJanka",
   "description": "",
   "main": "main.js",
   "scripts": {

@@ -17,16 +17,32 @@
 #status h1{
     font-size: 80px;
 }
-#add-app{
+
+header {
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+header button{
     background-color: rgba(0, 0, 0, 0);
     border: none;
     color: rgb(179, 179, 179);
     cursor: pointer;
-    font-size: 30px;
+    font-size: 20px;
+    margin: 5px;
 }
+header button:hover{
+    color: white;
+}
+
+#settings:focus {
+    outline: none;
+}
+
 #add-app:focus{
     outline: none;
 }

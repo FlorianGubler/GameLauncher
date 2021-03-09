@@ -8,7 +8,10 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
 <body style="background: rgba(0, 0, 0, 0.5);">
-    <button id="add-app"><i class="far fa-plus-square"></i></button>
+    <header>
+        <button id="settings" onclick="window.api.send('toMain', 'openWindow settings')"><i class="fas fa-cog"></i></button>
+        <button id="add-app"><i class="fas fa-plus" onclick="window.api.send('toMain', 'openWindow add_app')"></i></button>
+    </header>
     <div id="status">
         <h1>:(</h1>
         <p>Looks like there's nothing here</p>
