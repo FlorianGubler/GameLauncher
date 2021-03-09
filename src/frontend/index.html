@@ -9,8 +9,8 @@
 </head>
 <body style="background: rgba(0, 0, 0, 0.5);">
     <header>
-        <button id="settings"><i class="fas fa-cog"></i></button>
-        <button id="add-app"><i class="fas fa-plus"></i></button>
+        <button id="settings" onclick="window.api.send('toMain', 'openWindow settings')"><i class="fas fa-cog"></i></button>
+        <button id="add-app"><i class="fas fa-plus" onclick="window.api.send('toMain', 'openWindow add_app')"></i></button>
     </header>
     <div id="status">
         <h1>:(</h1>

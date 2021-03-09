@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Game Launcher Settings</title>
+    <link rel="stylesheet" href="assets/css/header_bar.css">
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg></script>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body style="background: rgb(71, 71, 71);">
+    <div id="header-bar">
+        <img id="header-icon" src="assets/img/icon.png">
+        <ul id="header-actions">
+            <li>|</li>
+            <li><a>Appereance</a></li>
+            <li>|</li>
+            <li><a>About</a></li>
+        </ul>
+        <p id="header-name">Settings</p>
+        <button id="header-close" onclick="window.api.send('toMain', 'closeWindow settings')"><i class="fas fa-times"></i></button>
+    </div>
+</body>
+</html>
