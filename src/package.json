@@ -1,0 +1,14 @@
+{
+  "name": "gamelauncher",
+  "version": "1.0.0",
+  "author": "OJanka",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^12.0.0"
+  }
+}
