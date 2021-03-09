@@ -35,7 +35,7 @@ function createWindow () {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
+      preload: path.join(app.getAppPath(), 'preload.js')
     }
   });
   let currentScreen = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
@@ -91,7 +91,6 @@ function openWindow_Settings() {
     win_settings.destroy();
   }
   win_settings = new BrowserWindow({
-    alwaysOnTop: true,
     skipTaskbar: true,
     show: false,
     width: 600,
@@ -102,7 +101,7 @@ function openWindow_Settings() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
+      preload: path.join(app.getAppPath(), 'preload.js')
     }
   });
   win_settings.loadFile("frontend/settings.html");
@@ -117,7 +116,6 @@ function openWindow_Add_app() {
     win_addGame.destroy();
   }
   win_addGame = new BrowserWindow({
-    alwaysOnTop: true,
     skipTaskbar: true,
     show: false,
     width: 400,
@@ -128,7 +126,7 @@ function openWindow_Add_app() {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      preload: "C:\\Users\\Admin\\Documents\\GitHub\\GameLauncher\\src\\preload.js"
+      preload: path.join(app.getAppPath(), 'preload.js')
     }
   });
   win_addGame.loadFile("frontend/add_app.html");
