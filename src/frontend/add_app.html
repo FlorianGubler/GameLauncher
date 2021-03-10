@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg></script>
     <link rel="stylesheet" href="assets/css/header_bar.css">
+    <link rel="stylesheet" href="assets/css/add_app.css">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 </head>
 <body style="background: rgb(71, 71, 71);">
@@ -14,10 +15,21 @@
     </div>
     <div class="content-main">
         <div id="add-app-main">
-            <input type="file" placeholder="Select your File">
-            <input type="text" placeholder="Give your App a custom name">
-            <button onclick="" type="submit">Add App <img src="assets/img/add_layer.png"></button>
+            <input onclick="this.style.backgroundColor='rgb(37, 37, 37)';" id="add-app-path" required="required" type="text" placeholder="Type your File Path">
+            <input onclick="this.style.backgroundColor='rgb(37, 37, 37)';" id="add-app-name" required="required" type="text" placeholder="Give your App a custom Name">
+            <button id="add-app-btn" type="submit">Add App <img src="assets/img/add_layer.png"></button>
         </div>
+        <script>
+            document.getElementById("add-app-btn").addEventListener("click", function(){
+                if(document.getElementById('add-app-name').value == "" || document.getElementById('add-app-path').value == ""){
+                    document.getElementById('add-app-name').style.backgroundColor = "#ff595f";
+                    document.getElementById('add-app-path').style.backgroundColor = "#ff595f";
+                }
+                else{
+                    window.api.send('toMain', 'DataMgr saveapp ' + document.getElementById('add-app-name').value + ';' + document.getElementById('add-app-path').value);
+                }
+            });
+        </script>
     </div>
 </body>
 </html>

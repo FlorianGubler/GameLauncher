@@ -1,5 +1,8 @@
 const {app, BrowserWindow, screen, Tray, Menu, nativeImage, globalShortcut, Main, ipcMain } = require('electron');
 const path = require("path");
+const { defaultApp } = require('process');
+const exec = require('child_process').execFile;
+const fs = require('fs');
 
 const appName = "GameLauncher";
 const iconPath = 'frontend/assets/img/icon.png';
@@ -163,6 +166,88 @@ app.on('browser-window-blur', () => {
   }
 });
 
+class LauncherApp {
+  constructor(name, path) {
+    this.name = name;
+    this.path = path;
+  }
+  save() {
+    var content = [];
+
+    fs.readFile('data/data.json', 'utf8' , (err, data) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      if(data != "" && data != null){
+        var apps = JSON.parse(data);
+        content = apps;
+        content.push(this);
+      }
+      else{
+        content.push(this);
+      }
+      content = JSON.stringify(content);
+      fs.writeFile('data/data.json', content, err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
+    })
+  }
+  del() {
+    var content = [];
+
+    fs.readFile('data/data.json', 'utf8' , (err, data) => {
+      if (err) {
+        console.error(err)
+        return
+      }
+      if(data != "" && data != null){
+        var apps = JSON.parse(data);
+        var pos;
+        apps.forEach((app, i) => {
+          if(JSON.stringify(app) == JSON.stringify(this)){
+            pos = i;
+          }
+        });
+        if(pos == undefined || pos == null || pos == -1){
+          console.log("pos: " + pos);
+          return
+        }
+        else{
+          apps.splice(pos, 1);
+          content = apps;
+          content = JSON.stringify(content);
+          fs.writeFile('data/data.json', content, err => {
+            if (err) {
+              console.error(err)
+              return
+            }
+          })
+        }
+      }
+      else{
+        return
+      }
+      
+    })
+  }
+}
+
+function getApps(){
+  fs.readFile('data/data.json', 'utf8' , (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    if(data != "" && data != null){
+      return JSON.parse(data);
+    }
+  })
+}
+
 ipcMain.on("toMain", (event, command) => {
   args = command.split(' ');
   if (args.length > 0) {
@@ -187,6 +272,26 @@ ipcMain.on("toMain", (event, command) => {
         }
       }
       break;
+      case 'DataMgr':
+      if (args.length > 2) {
+        if (args[1] == "saveapp") {
+          new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).save(); //First Name then Path
+          closeWindow_Add_app();
+        }
+        else if (args[1] == "delapp") {
+          new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).del();
+        }
+        else if (args[1] == "getapps") {
+          event.reply("asynchronous-reply", "replyApps;" + JSON.stringify(getApps()));
+        }
+      }
+      break;
+      case 'Execute':
+      if (args.length > 1) {
+        exec(args[1]);
+      }
+      break;
+      default: console.log("Unkwown Command in Messaging");
     }
   }
 });
