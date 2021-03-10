@@ -32,10 +32,11 @@
 #header-actions a{
     cursor: pointer;
     display: block;
+    -webkit-app-region: no-drag;
     color: rgb(241, 139, 241);
 }
 #header-actions a:hover{
-    background-color: rgb(165, 165, 165);
+    background-color: rgb(54, 54, 54);
 }
 #header-actions li{
     margin: 2px;
@@ -51,6 +52,9 @@
     cursor: pointer;
     font-size: 15px;
     -webkit-app-region: no-drag;
+}
+#header-close:focus{
+    outline: none;
 }
 .content-main{
     margin-top: 25px;
