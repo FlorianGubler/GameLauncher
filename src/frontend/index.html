@@ -23,7 +23,7 @@
         window.api.send("toMain", "DataMgr getapps");
         window.api.receive("fromMain", (args) => {
             if(args.split(";")[0] == "replyApps"){
-                document.getElementById("test").innerHTML = func.split(" ")[1];
+                document.getElementById("test").innerHTML = args.split(";")[1];
             }
             else{
                 document.getElementById("test").innerHTML = args;
