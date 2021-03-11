@@ -32,10 +32,11 @@
 #header-actions a{
     cursor: pointer;
     display: block;
+    -webkit-app-region: no-drag;
     color: rgb(241, 139, 241);
 }
 #header-actions a:hover{
-    background-color: rgb(165, 165, 165);
+    background-color: rgb(54, 54, 54);
 }
 #header-actions li{
     margin: 2px;
@@ -52,31 +53,6 @@
     font-size: 15px;
     -webkit-app-region: no-drag;
 }
-.content-main{
-    margin-top: 25px;
-}
-#add-app-main{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-#add-app-main img{
-    width: 15px;
-    height: 15px;
-}
-#add-app-main button, #add-app-main input{
-    background-color: rgb(37, 37, 37);
-    border: none;
-    color: rgb(219, 219, 219);
-    margin: 10px;
-    padding: 7px;
-    height: min-content;
-    min-width: 200px;
-}
-#add-app-main button{
-    cursor: pointer;
-}
-#add-app-main input[type=file]{
-    display: inline-block;
+#header-close:focus{
+    outline: none;
 }

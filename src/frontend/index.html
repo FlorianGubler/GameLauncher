@@ -16,5 +16,19 @@
         <h1>:(</h1>
         <p>Looks like there's nothing here</p>
     </div>
+    <div id="app-list">
+        <p style="color:white;" id="test">Hallo</p>
+    </div>
+    <script>
+        window.api.send("toMain", "DataMgr getapps");
+        window.api.receive("fromMain", (args) => {
+            if(args.split(";")[0] == "replyApps"){
+                document.getElementById("test").innerHTML = func.split(" ")[1];
+            }
+            else{
+                document.getElementById("test").innerHTML = args;
+            }
+        });
+    </script>
 </body>
 </html>

@@ -4,20 +4,75 @@
     <meta charset="UTF-8">
     <title>Game Launcher Settings</title>
     <link rel="stylesheet" href="assets/css/header_bar.css">
+    <link rel="stylesheet" href="assets/css/settings.css"
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg></script>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <script>
+        //Load Default Anchor
+        window.location.href += "#appereance";
+
+        //Get Colors
+        headerColor = "#707070";
+        backgroundColor = "#474747";
+        BtnColor = "#cfcfcf";
+
+        function SetNewAppereance(element){
+            var newAppereance = [{
+                name: element.name,
+                value: element.value
+            }];
+
+            window.api.send('toMain', 'DataMgr makeAdjustment ' + JSON.stringify(newAppereance));
+        }
+
+        function delAllAdjustments(){
+            /*var resetVars = ['headerColor', "backgroundColor", "BtnColor"];
+            resetVars.forEach(res_var => {
+                window.api.send('toMain', 'DataMgr delAdjustment ' + res_var)
+            })*/
+        }
+    </script>
 </head>
 <body style="background: rgb(71, 71, 71);">
     <div id="header-bar">
         <img id="header-icon" src="assets/img/icon.png">
         <ul id="header-actions">
             <li>|</li>
-            <li><a>Appereance</a></li>
+            <li><a href="#appereance">Appereance</a></li>
             <li>|</li>
-            <li><a>About</a></li>
+            <li><a href="#about">About</a></li>
         </ul>
         <p id="header-name">Settings</p>
         <button id="header-close" onclick="window.api.send('toMain', 'closeWindow settings')"><i class="fas fa-times"></i></button>
     </div>
+    <div id="appereance">
+        <fieldset>
+            <legend>Color</legend>
+
+            <label>Header Color</label>
+            <input onchange="SetNewAppereance(this);" name="headerColor" id="appe-header-color" type="color">
+
+            <label>Background Color</label>
+            <input onchange="SetNewAppereance(this);" name="backgroundColor" id="appe-background-color" type="color">
+
+            <label>Button Color</label>
+            <input onchange="SetNewAppereance(this);" name="BtnColor" id="appe-button-color" type="color">
+        </fieldset>
+
+        <fieldset>
+            <legend>Others</legend>
+            <button onclick="delAllAdjustments();">Reset All</button>
+        </fieldset>
+    </div>
+    <div id="about">
+
+    </div>
+    <script>
+        document.getElementById("appe-header-color").value = headerColor;
+        document.getElementById("appe-background-color").value = backgroundColor;
+        document.getElementById("appe-button-color").value = BtnColor;
+
+        document.getElementsByTagName("button").style.color = BtnColor;
+    </script>
 </body>
 </html>
