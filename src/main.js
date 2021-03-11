@@ -248,41 +248,158 @@ function getApps(){
   })
 }
 
+function getAppereance(){
+  fs.readFile('data/default_appereance.json', 'utf8' , (err_def, data_def) => {
+    if (err_def) {
+      console.error(err_def)
+      return
+    }
+    if(data_def != "" && data_def != null){
+      var default_appereance = JSON.parse(data_def);
+      fs.readFile('data/adjustments.json', 'utf8' , (err_cust, data_cust) => {
+        if (err_cust) {
+          console.error(err_cust)
+          return
+        }
+        if(data_cust != "" && data_cust != null){
+          var custom_apperence = JSON.parse(data_cust);
+          default_appereance.forEach((def) => {
+            custom_apperence.forEach((cust) => {
+              if(def.name == cust.name){
+                def.value = cust.value;
+              }
+              else{
+                var checknew = false;
+                default_appereance.forEach((defnew) => {
+                  if(defnew.name == cust.name){
+                    checknew = true;
+                  }
+                })
+                if(checknew == false){
+                  default_appereance.push(cust);
+                }
+              }
+            })
+          })
+          return default_appereance;
+        }
+      })
+    }
+    else{
+      return false
+    }
+  })
+}
+
+function makeAdjustments(adjust_args){
+  var args = JSON.parse(adjust_args);
+  fs.readFile('data/adjustments.json', 'utf8' , (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    if(data != "" && data != null){
+      var adjustments = JSON.parse(data);
+      args.forEach(arg => {
+        var found = false;
+        adjustments.forEach(adjustment => {
+          if(adjustment.name == arg.name){
+            adjustment.value = arg.value;
+            found = true;
+          }
+        })
+        if(!found){
+          adjustments.push(arg);
+        }
+      })
+    }
+    else{
+      var adjustments = args;
+    }
+    fs.writeFile('data/adjustments.json', JSON.stringify(adjustments), err => {
+      if (err) {
+        console.error(err)
+        return
+      }
+    })
+  })
+}
+
+function delAdjustment(ajdname){
+  fs.readFile('data/adjustments.json', 'utf8' , (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    if(data != "" && data != null){
+      adjustments = JSON.parse(data);
+      adjustments.forEach((adjustment, index) => {
+        if(adjustment.name == ajdname){
+          adjustments.splice(index, 1);
+        }
+      })
+      fs.writeFile('data/adjustments.json', JSON.stringify(adjustments), err => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
+    }
+    else{
+      return false;
+    }
+  })
+}
+
 ipcMain.on("toMain", (event, command) => {
   args = command.split(' ');
   if (args.length > 0) {
     switch(args[0]){
       case 'openWindow':
         if (args.length > 1) {
-          if (args[1] == "settings") {
+          if (args[1] == "settings") { //Bsp. "openWindow settings"
             openWindow_Settings();
           }
-          else if (args[1] == "add_app") {
+          else if (args[1] == "add_app") { //Bsp. "openWindow add_app"
             openWindow_Add_app();
           }
         }
         break;
       case 'closeWindow':
       if (args.length > 1) {
-        if (args[1] == "settings") {
+        if (args[1] == "settings") { //Bsp. "closeWindow settings"
           closeWindow_Settings();
+          showWindow();
         }
-        else if (args[1] == "add_app") {
+        else if (args[1] == "add_app") { //Bsp. "closeWindow add_app"
           closeWindow_Add_app();
+          showWindow();
         }
       }
       break;
       case 'DataMgr':
       if (args.length > 2) {
-        if (args[1] == "saveapp") {
+        if (args[1] == "saveapp") { //Bsp. "DataMgr saveapp <AppName>;<AppPath>"
           new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).save(); //First Name then Path
           closeWindow_Add_app();
         }
-        else if (args[1] == "delapp") {
+        else if (args[1] == "delapp") { //Bsp. "DataMgr delapp <AppName>;<AppPath>"
           new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).del();
         }
-        else if (args[1] == "getapps") {
+        else if (args[1] == "getapps") { //Bsp. "DataMgr getapps"
           event.reply("asynchronous-reply", "replyApps;" + JSON.stringify(getApps()));
+        }
+        else if (args[1] == "makeAdjustment") { //Bsp. 
+          makeAdjustments(args[2]);
+        }
+        else if (args[1] == "delAdjustment") {
+          delAdjustment(args[2]);
+        }
+        else if (args[1] == "getAppereance") {
+          event.reply("asynchronous-reply", "replyApps;" + JSON.stringify(getAppereance()));
+        }
+        else{
+          console.log("Unkown DataMgr Attribute");
         }
       }
       break;
@@ -291,7 +408,8 @@ ipcMain.on("toMain", (event, command) => {
         exec(args[1]);
       }
       break;
-      default: console.log("Unkwown Command in Messaging");
+      
+      default: console.error("Unkwown Command in Messaging");
     }
   }
 });
