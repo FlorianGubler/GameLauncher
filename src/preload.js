@@ -15,19 +15,9 @@ contextBridge.exposeInMainWorld(
             }
         },
         receive: (channel, func) => {
-            /*let validChannels = ["fromMain"];
-            if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender` 
-                ipcRenderer.on(channel, (event, ...args) => func(...args));
-            }*/
-            let validChannels = ["fromMain"];
-            if (validChannels.includes(receivechannel)) {
-                // Deliberately strip event as it includes `sender` 
-                ipcRenderer.on(channel, (event, ...args) => {
-                    ipcRenderer.send("toMain", "DataMgr log On");
-                    func(...args)
-                });
-            }
+            ipcRenderer.on(channel, (event, args) => {
+                func(JSON.parse(args))
+            });
         }
     }
 );

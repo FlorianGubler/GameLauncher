@@ -9,24 +9,39 @@
 </head>
 <body style="background: rgba(0, 0, 0, 0.5);">
     <header>
-        <button id="settings" onclick="window.api.send('toMain', 'openWindow settings')"><i class="fas fa-cog"></i></button>
-        <button id="add-app"><i class="fas fa-plus" onclick="window.api.send('toMain', 'openWindow add_app')"></i></button>
+        <button id="settings" onclick="window.api.send('toMain', JSON.stringify({type: 'openWindow', cmd: 'settings', attributes: ''}))"><i class="fas fa-cog"></i></button>
+        <button id="add-app"><i class="fas fa-plus" onclick="window.api.send('toMain', JSON.stringify({type: 'openWindow', cmd: 'add_app', attributes: ''}))"></i></button>
     </header>
     <div id="status">
         <h1>:(</h1>
         <p>Looks like there's nothing here</p>
     </div>
     <div id="app-list">
-        <p style="color:white;" id="test">Hallo</p>
+
     </div>
     <script>
-        window.api.send("toMain", "DataMgr getapps");
+        window.api.send("toMain", JSON.stringify({type: 'DataMgr', cmd: 'getapps', attributes: ''}));
         window.api.receive("fromMain", (args) => {
-            if(args.split(";")[0] == "replyApps"){
-                document.getElementById("test").innerHTML = func.split(" ")[1];
+            if(args.type == "replyApps"){
+                var apps = JSON.parse(args.attributes);
+                if(apps.length > 0){
+                    apps.forEach(app => {
+                        newApp = document.createElement("div");
+                        newApp.className = "exec-app";
+                        newApp_name = document.createElement("p");
+                        newApp_name.innerHTML = app.name;
+                        newApp.appendChild(newApp_name);
+                        newApp.addEventListener('click', function(){window.api.send('toMain', JSON.stringify({type: 'Execute', cmd: '', attributes: app.path}));}, false)
+                        document.getElementById("app-list").appendChild(newApp);
+                    });
+                    document.getElementById("status").style.display = "none";
+                }
+                else{
+                    document.getElementById("status").style.display = "block";
+                }
             }
             else{
-                document.getElementById("test").innerHTML = args;
+                document.getElementById("test").innerHTML = JSON.stringify(args);
             }
         });
     </script>

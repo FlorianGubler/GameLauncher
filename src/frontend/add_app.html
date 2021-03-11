@@ -11,7 +11,7 @@
     <div id="header-bar">
         <img id="header-icon" src="assets/img/icon.png">
         <p id="header-name">Add new App</p>
-        <button id="header-close" onclick="window.api.send('toMain', 'closeWindow add_app')"><i class="fas fa-times"></i></button>
+        <button id="header-close" onclick="window.api.send('toMain', JSON.stringify({type: 'closeWindow', cmd: 'add_app', attributes: ''}))"><i class="fas fa-times"></i></button>
     </div>
     <div class="content-main">
         <div id="add-app-main">
@@ -25,8 +25,12 @@
                     document.getElementById('add-app-name').style.backgroundColor = "#ff595f";
                     document.getElementById('add-app-path').style.backgroundColor = "#ff595f";
                 }
+                else if(document.getElementById('add-app-name').value.split(" ").length > 1 || document.getElementById('add-app-path').value.split(" ").length > 1){
+                    document.getElementById('add-app-name').style.backgroundColor = "#ff595f";
+                    document.getElementById('add-app-path').style.backgroundColor = "#ff595f";
+                }
                 else{
-                    window.api.send('toMain', 'DataMgr saveapp ' + document.getElementById('add-app-name').value + ';' + document.getElementById('add-app-path').value);
+                    window.api.send('toMain', JSON.stringify({type: "DataMgr", cmd: "saveapp", attributes: document.getElementById('add-app-name').value + ';' + document.getElementById('add-app-path').value}));
                 }
             });
         </script>

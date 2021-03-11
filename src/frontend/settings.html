@@ -22,7 +22,7 @@
                 value: element.value
             }];
 
-            window.api.send('toMain', 'DataMgr makeAdjustment ' + JSON.stringify(newAppereance));
+            window.api.send('toMain', JSON.stringify({type: 'DataMgr', cmd: 'makeAdjustment', attributes: JSON.stringify(newAppereance)}));
         }
 
         function delAllAdjustments(){
@@ -43,7 +43,7 @@
             <li><a href="#about">About</a></li>
         </ul>
         <p id="header-name">Settings</p>
-        <button id="header-close" onclick="window.api.send('toMain', 'closeWindow settings')"><i class="fas fa-times"></i></button>
+        <button id="header-close" onclick="window.api.send('toMain', JSON.stringify({type: 'closeWindow', cmd: 'settings', attributes: ''}))"><i class="fas fa-times"></i></button>
     </div>
     <div id="appereance">
         <fieldset>
