@@ -351,6 +351,15 @@ function delAdjustment(ajdname){
   })
 }
 
+function logSelf(logtext){
+  fs.writeFile('data/log.txt', logtext, err => {
+    if (err) {
+      console.error(err)
+      return
+    }
+  })
+}
+
 ipcMain.on("toMain", (event, command) => {
   args = command.split(' ');
   if (args.length > 0) {
@@ -378,7 +387,7 @@ ipcMain.on("toMain", (event, command) => {
       }
       break;
       case 'DataMgr':
-      if (args.length > 2) {
+      if (args.length > 1) {
         if (args[1] == "saveapp") { //Bsp. "DataMgr saveapp <AppName>;<AppPath>"
           new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).save(); //First Name then Path
           closeWindow_Add_app();
@@ -387,7 +396,7 @@ ipcMain.on("toMain", (event, command) => {
           new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).del();
         }
         else if (args[1] == "getapps") { //Bsp. "DataMgr getapps"
-          event.reply("asynchronous-reply", "replyApps;" + JSON.stringify(getApps()));
+          event.reply("fromMain", "replyApps;" + JSON.stringify(getApps()));
         }
         else if (args[1] == "makeAdjustment") { //Bsp. 
           makeAdjustments(args[2]);
@@ -396,7 +405,10 @@ ipcMain.on("toMain", (event, command) => {
           delAdjustment(args[2]);
         }
         else if (args[1] == "getAppereance") {
-          event.reply("asynchronous-reply", "replyApps;" + JSON.stringify(getAppereance()));
+          event.reply("fromMain", "replyApps;" + JSON.stringify(getAppereance()));
+        }
+        else if (args[1] == "log") {
+          logSelf(args[2]);
         }
         else{
           console.log("Unkown DataMgr Attribute");
