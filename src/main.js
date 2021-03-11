@@ -237,16 +237,17 @@ class LauncherApp {
 }
 
 function getApps(){
-  fs.readFile('data/data.json', 'utf8' , (err, data) => {
-    if (err) {
-      console.error(err)
-      return
-    }
-    if(data != "" && data != null){
-      return JSON.parse(data);
-    }
-  })
+  var response;
+  const data = fs.readFileSync('data/data.json', {encoding: 'utf8', flag: 'r'})
+    
+  if(data != "" && data != null){
+    return JSON.parse(data);
+  }
+  else{
+    return "";
+  }
 }
+
 
 function getAppereance(){
   fs.readFile('data/default_appereance.json', 'utf8' , (err_def, data_def) => {
@@ -361,67 +362,57 @@ function logSelf(logtext){
 }
 
 ipcMain.on("toMain", (event, command) => {
-  args = command.split(' ');
-  if (args.length > 0) {
-    switch(args[0]){
-      case 'openWindow':
-        if (args.length > 1) {
-          if (args[1] == "settings") { //Bsp. "openWindow settings"
-            openWindow_Settings();
-          }
-          else if (args[1] == "add_app") { //Bsp. "openWindow add_app"
-            openWindow_Add_app();
-          }
-        }
-        break;
-      case 'closeWindow':
-      if (args.length > 1) {
-        if (args[1] == "settings") { //Bsp. "closeWindow settings"
-          closeWindow_Settings();
-          showWindow();
-        }
-        else if (args[1] == "add_app") { //Bsp. "closeWindow add_app"
-          closeWindow_Add_app();
-          showWindow();
-        }
+  args = JSON.parse(command);
+  switch(args.type){
+    case 'openWindow':
+      if (args.cmd == "settings") { //Bsp. "openWindow settings"
+        openWindow_Settings();
+      }
+      else if (args.cmd == "add_app") { //Bsp. "openWindow add_app"
+        openWindow_Add_app();
       }
       break;
-      case 'DataMgr':
-      if (args.length > 1) {
-        if (args[1] == "saveapp") { //Bsp. "DataMgr saveapp <AppName>;<AppPath>"
-          new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).save(); //First Name then Path
-          closeWindow_Add_app();
-        }
-        else if (args[1] == "delapp") { //Bsp. "DataMgr delapp <AppName>;<AppPath>"
-          new LauncherApp(args[2].split(";")[0], args[2].split(";")[1]).del();
-        }
-        else if (args[1] == "getapps") { //Bsp. "DataMgr getapps"
-          event.reply("fromMain", "replyApps;" + JSON.stringify(getApps()));
-        }
-        else if (args[1] == "makeAdjustment") { //Bsp. 
-          makeAdjustments(args[2]);
-        }
-        else if (args[1] == "delAdjustment") {
-          delAdjustment(args[2]);
-        }
-        else if (args[1] == "getAppereance") {
-          event.reply("fromMain", "replyApps;" + JSON.stringify(getAppereance()));
-        }
-        else if (args[1] == "log") {
-          logSelf(args[2]);
-        }
-        else{
-          console.log("Unkown DataMgr Attribute");
-        }
+    case 'closeWindow':
+      if (args.cmd == "settings") { //Bsp. "closeWindow settings"
+        closeWindow_Settings();
+        showWindow();
       }
-      break;
-      case 'Execute':
-      if (args.length > 1) {
-        exec(args[1]);
+      else if (args.cmd == "add_app") { //Bsp. "closeWindow add_app"
+        closeWindow_Add_app();
+        showWindow();
       }
-      break;
-      
-      default: console.error("Unkwown Command in Messaging");
-    }
+    break;
+    case 'DataMgr':
+      if (args.cmd == "saveapp") { //Bsp. "DataMgr saveapp <AppName>;<AppPath>"
+        new LauncherApp(args.attributes.split(";")[0], args[2].split(";")[1]).save(); 
+        closeWindow_Add_app();
+      }
+      else if (args.cmd == "delapp") { //Bsp. "DataMgr delapp <AppName>;<AppPath>"
+        new LauncherApp(args.attributes.split(";")[0], args[2].split(";")[1]).del();
+      }
+      else if (args.cmd == "getapps") { //Bsp. "DataMgr getapps"
+        event.reply("fromMain", JSON.stringify({type: "replyApps", cmd: "", attributes: JSON.stringify(getApps())}));
+      }
+      else if (args.cmd == "makeAdjustment") { //Bsp. "Data Mgr makeAdjustment //JSON// <object>"
+        makeAdjustments(args.attributes);
+      }
+      else if (args.cmd == "delAdjustment") { //Bsp. "Data Mgr delAdjustment <adjustname>"
+        delAdjustment(args.attributes);
+      }
+      else if (args.cmd == "getAppereance") { //Bsp. "Data Mgr getAppereance"
+        event.reply("fromMain", JSON.stringify({type: "replyAppereance", cmd: "", attributes: JSON.stringify(getAppereance())}));
+      }
+      else if (args.cmd == "log") { //Bsp. "Data Mgr log <log String>"
+        logSelf(args.attributes);
+      }
+      else{
+        console.log("Unkown DataMgr Attribute");
+      }
+    break;
+    case 'Execute':
+      exec(args.attributes);
+    break;
+    
+    default: console.error("Unkwown Command in Messaging");
   }
 });
