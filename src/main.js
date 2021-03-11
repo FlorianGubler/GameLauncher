@@ -384,11 +384,13 @@ ipcMain.on("toMain", (event, command) => {
     break;
     case 'DataMgr':
       if (args.cmd == "saveapp") { //Bsp. "DataMgr saveapp <AppName>;<AppPath>"
-        new LauncherApp(args.attributes.split(";")[0], args[2].split(";")[1]).save(); 
+        var attributes = JSON.parse(args.attributes);
+        new LauncherApp(attributes.name, attributes.path).save(); 
         closeWindow_Add_app();
       }
       else if (args.cmd == "delapp") { //Bsp. "DataMgr delapp <AppName>;<AppPath>"
-        new LauncherApp(args.attributes.split(";")[0], args[2].split(";")[1]).del();
+        var attributes = JSON.parse(args.attributes);
+        new LauncherApp(attributes.name, attributes.path).del();
       }
       else if (args.cmd == "getapps") { //Bsp. "DataMgr getapps"
         event.reply("fromMain", JSON.stringify({type: "replyApps", cmd: "", attributes: JSON.stringify(getApps())}));

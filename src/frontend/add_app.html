@@ -25,12 +25,8 @@
                     document.getElementById('add-app-name').style.backgroundColor = "#ff595f";
                     document.getElementById('add-app-path').style.backgroundColor = "#ff595f";
                 }
-                else if(document.getElementById('add-app-name').value.split(" ").length > 1 || document.getElementById('add-app-path').value.split(" ").length > 1){
-                    document.getElementById('add-app-name').style.backgroundColor = "#ff595f";
-                    document.getElementById('add-app-path').style.backgroundColor = "#ff595f";
-                }
                 else{
-                    window.api.send('toMain', JSON.stringify({type: "DataMgr", cmd: "saveapp", attributes: document.getElementById('add-app-name').value + ';' + document.getElementById('add-app-path').value}));
+                    window.api.send('toMain', JSON.stringify({type: "DataMgr", cmd: "saveapp", attributes: JSON.stringify({name: document.getElementById('add-app-name').value, path: document.getElementById('add-app-path').value})}));
                 }
             });
         </script>
