@@ -11,11 +11,6 @@
         //Load Default Anchor
         window.location.href += "#appereance";
 
-        //Get Colors
-        headerColor = "#707070";
-        backgroundColor = "#474747";
-        BtnColor = "#cfcfcf";
-
         function SetNewAppereance(element){
             var newAppereance = [{
                 name: element.name,
@@ -23,6 +18,7 @@
             }];
 
             window.api.send('toMain', JSON.stringify({type: 'DataMgr', cmd: 'makeAdjustment', attributes: JSON.stringify(newAppereance)}));
+            window.location.href = window.location.href.split("#")[0]
         }
 
         function delAllAdjustments(){
@@ -61,18 +57,12 @@
 
         <fieldset>
             <legend>Others</legend>
-            <button onclick="delAllAdjustments();">Reset All</button>
+            <button style="border:none;" onclick="delAllAdjustments();">Reset All</button>
         </fieldset>
     </div>
     <div id="about">
 
     </div>
-    <script>
-        document.getElementById("appe-header-color").value = headerColor;
-        document.getElementById("appe-background-color").value = backgroundColor;
-        document.getElementById("appe-button-color").value = BtnColor;
-
-        document.getElementsByTagName("button").style.color = BtnColor;
-    </script>
 </body>
+<script src="assets/js/adjust_appereance.js"></script>
 </html>

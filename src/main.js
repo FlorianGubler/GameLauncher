@@ -250,46 +250,36 @@ function getApps(){
 
 
 function getAppereance(){
-  fs.readFile('data/default_appereance.json', 'utf8' , (err_def, data_def) => {
-    if (err_def) {
-      console.error(err_def)
-      return
-    }
-    if(data_def != "" && data_def != null){
-      var default_appereance = JSON.parse(data_def);
-      fs.readFile('data/adjustments.json', 'utf8' , (err_cust, data_cust) => {
-        if (err_cust) {
-          console.error(err_cust)
-          return
-        }
-        if(data_cust != "" && data_cust != null){
-          var custom_apperence = JSON.parse(data_cust);
-          default_appereance.forEach((def) => {
-            custom_apperence.forEach((cust) => {
-              if(def.name == cust.name){
-                def.value = cust.value;
-              }
-              else{
-                var checknew = false;
-                default_appereance.forEach((defnew) => {
-                  if(defnew.name == cust.name){
-                    checknew = true;
-                  }
-                })
-                if(checknew == false){
-                  default_appereance.push(cust);
-                }
+  var default_appereance_json = fs.readFileSync('data/default_appereance.json', {encoding:'utf8', flag:'r'});
+  if(default_appereance_json != "" && default_appereance_json != null){
+    var default_appereance = JSON.parse(default_appereance_json)
+    var adjustments_json = fs.readFileSync('data/adjustments.json', {encoding:'utf8', flag:'r'});
+    if(adjustments_json != "" && adjustments_json != null){
+      var custom_appereance = JSON.parse(adjustments_json);
+      default_appereance.forEach((def) => {
+        custom_appereance.forEach((cust) => {
+          if(def.name == cust.name){
+            def.value = cust.value;
+          }
+          else{
+            var checknew = false;
+            default_appereance.forEach((defnew) => {
+              if(defnew.name == cust.name){
+                checknew = true;
               }
             })
-          })
-          return default_appereance;
-        }
+            if(checknew == false){
+              default_appereance.push(cust);
+            }
+          }
+        })
       })
+      return default_appereance;
     }
-    else{
-      return false
-    }
-  })
+  }
+  else{
+    return
+  }
 }
 
 function makeAdjustments(adjust_args){
@@ -393,7 +383,7 @@ ipcMain.on("toMain", (event, command) => {
         new LauncherApp(attributes.name, attributes.path).del();
       }
       else if (args.cmd == "getapps") { //Bsp. "DataMgr getapps"
-        event.reply("fromMain", JSON.stringify({type: "replyApps", cmd: "", attributes: JSON.stringify(getApps())}));
+        event.reply("fromMainA", JSON.stringify({type: "replyApps", cmd: "", attributes: JSON.stringify(getApps())}));
       }
       else if (args.cmd == "makeAdjustment") { //Bsp. "Data Mgr makeAdjustment //JSON// <object>"
         makeAdjustments(args.attributes);
@@ -402,7 +392,7 @@ ipcMain.on("toMain", (event, command) => {
         delAdjustment(args.attributes);
       }
       else if (args.cmd == "getAppereance") { //Bsp. "Data Mgr getAppereance"
-        event.reply("fromMain", JSON.stringify({type: "replyAppereance", cmd: "", attributes: JSON.stringify(getAppereance())}));
+        event.reply("fromMainB", JSON.stringify({type: "replyAppereance", cmd: "", attributes: JSON.stringify(getAppereance())}));
       }
       else if (args.cmd == "log") { //Bsp. "Data Mgr log <log String>"
         logSelf(args.attributes);

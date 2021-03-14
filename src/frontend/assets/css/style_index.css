@@ -2,6 +2,9 @@
     padding: 0;
     margin: 0;
 }
+#test{
+    color: white;
+}
 
 #status{
     display: none;
@@ -27,7 +30,7 @@ header {
     justify-content: space-around;
 }
 
-header button{
+header a{
     background-color: rgba(0, 0, 0, 0);
     border: none;
     color: rgb(179, 179, 179);
@@ -35,7 +38,7 @@ header button{
     font-size: 20px;
     margin: 5px;
 }
-header button:hover{
+header a:hover{
     color: white;
 }
 
@@ -63,9 +66,14 @@ header button:hover{
     font-family: sans-serif;
     color: pink;
     display: flex;
+    border: none;
+    outline: none;
 }
 .exec-app:hover{
     background-color: rgb(48, 48, 48);
+}
+.exec-app:focus{
+    outline: none;
 }
 .exec-app p{
     position: relative;
