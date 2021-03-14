@@ -1,6 +1,9 @@
 .content-main{
     margin-top: 25px;
 }
+button{
+    border: none;
+}
 #add-app-main{
     display: flex;
     flex-direction: column;
